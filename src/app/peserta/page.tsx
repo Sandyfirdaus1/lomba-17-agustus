@@ -8,7 +8,7 @@ import {
   BackendParticipant,
   StatsResponse,
 } from "@/lib/api";
-import { Trash2, AlertTriangle, Download, RefreshCw } from "lucide-react";
+import { Trash2, Download, RefreshCw } from "lucide-react";
 
 export default function PesertaPage() {
   const [query, setQuery] = useState("");

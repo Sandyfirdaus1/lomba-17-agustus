@@ -135,7 +135,7 @@ export async function deleteParticipant(id: string): Promise<boolean> {
       method: "DELETE",
     });
 
-    const result: ApiResponse<any> = await response.json();
+    const result: ApiResponse<{ message?: string }> = await response.json();
 
     if (result.success) {
       return true;

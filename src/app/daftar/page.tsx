@@ -1,9 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { competitions } from "@/lib/competitions";
+import { useEffect, useState } from "react";
 import { registerParticipant, NewParticipant } from "@/lib/api";
-import { Check, Loader2, AlertCircle } from "lucide-react";
+import { Loader2, AlertCircle } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function DaftarPage() {
@@ -66,7 +65,7 @@ export default function DaftarPage() {
       } else {
         setError("Gagal mendaftarkan peserta. Silakan coba lagi.");
       }
-    } catch (err) {
+    } catch {
       setError("Terjadi kesalahan. Silakan coba lagi.");
     } finally {
       setSaving(false);

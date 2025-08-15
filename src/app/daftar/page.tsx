@@ -7,32 +7,91 @@ import { motion } from "framer-motion";
 
 export default function DaftarPage() {
   const [nama, setNama] = useState("");
-  const [email, setEmail] = useState("");
-  const [noTelepon, setNoTelepon] = useState("");
-  const [alamat, setAlamat] = useState("");
+  const [usia, setUsia] = useState<number | "">("");
   const [jenisLomba, setJenisLomba] = useState("");
-  const [catatan, setCatatan] = useState("");
+  const [noTelepon, setNoTelepon] = useState("");
   const [saving, setSaving] = useState(false);
   const [done, setDone] = useState(false);
   const [error, setError] = useState("");
   const [mounted, setMounted] = useState(false);
 
   const availableLomba = [
-    "Lomba Makan Kerupuk",
-    "Lomba Balap Karung",
-    "Lomba Tarik Tambang",
-    "Lomba Panjat Pinang",
-    "Lomba Bakiak",
+    {
+      id: "makan-kerupuk",
+      name: "Lomba Makan Kerupuk",
+      minAge: 5,
+      maxAge: 70,
+      description: "Usia 5-70 tahun",
+    },
+    {
+      id: "balap-karung",
+      name: "Lomba Balap Karung",
+      minAge: 7,
+      maxAge: 60,
+      description: "Usia 7-60 tahun",
+    },
+    {
+      id: "tarik-tambang",
+      name: "Lomba Tarik Tambang",
+      minAge: 12,
+      maxAge: 60,
+      description: "Usia 12-60 tahun",
+    },
+    {
+      id: "panjat-pinang",
+      name: "Lomba Panjat Pinang",
+      minAge: 17,
+      maxAge: 50,
+      description: "Usia 17-50 tahun",
+    },
+    {
+      id: "bakiak",
+      name: "Lomba Bakiak",
+      minAge: 10,
+      maxAge: 60,
+      description: "Usia 10-60 tahun",
+    },
   ];
+
+  // Get selected lomba info
+  const selectedLomba = availableLomba.find((l) => l.id === jenisLomba);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
+  // Reset usia when lomba changes
+  useEffect(() => {
+    if (jenisLomba && usia !== "") {
+      if (
+        selectedLomba &&
+        (usia < selectedLomba.minAge || usia > selectedLomba.maxAge)
+      ) {
+        setUsia("");
+        setError(
+          `Usia harus ${selectedLomba.minAge}-${selectedLomba.maxAge} tahun untuk ${selectedLomba.name}`
+        );
+      } else {
+        setError("");
+      }
+    }
+  }, [jenisLomba, usia, selectedLomba]);
+
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!nama || !email || !noTelepon || !alamat || !jenisLomba) {
-      setError("Semua field wajib diisi kecuali catatan");
+    if (!nama || typeof usia !== "number" || !jenisLomba) {
+      setError("Nama, usia, dan jenis lomba wajib diisi");
+      return;
+    }
+
+    // Validate usia range
+    if (
+      selectedLomba &&
+      (usia < selectedLomba.minAge || usia > selectedLomba.maxAge)
+    ) {
+      setError(
+        `Usia harus ${selectedLomba.minAge}-${selectedLomba.maxAge} tahun untuk ${selectedLomba.name}`
+      );
       return;
     }
 
@@ -41,11 +100,11 @@ export default function DaftarPage() {
 
     const participant: NewParticipant = {
       nama,
-      email,
-      noTelepon,
-      alamat,
-      jenisLomba,
-      catatan: catatan || undefined,
+      email: `${nama.toLowerCase().replace(/\s+/g, "")}@peserta.com`, // Generate email otomatis
+      noTelepon: noTelepon || "Tidak ada",
+      alamat: "Tidak diisi", // Default value
+      jenisLomba: selectedLomba?.name || jenisLomba,
+      catatan: `Usia: ${usia} tahun`,
     };
 
     try {
@@ -54,11 +113,9 @@ export default function DaftarPage() {
       if (result) {
         setDone(true);
         setNama("");
-        setEmail("");
-        setNoTelepon("");
-        setAlamat("");
+        setUsia("");
         setJenisLomba("");
-        setCatatan("");
+        setNoTelepon("");
 
         // Trigger event untuk update halaman peserta
         window.dispatchEvent(new CustomEvent("participantAdded"));
@@ -93,7 +150,7 @@ export default function DaftarPage() {
         Pendaftaran Peserta
       </motion.h1>
       <p className="mt-2 text-foreground/70">
-        Isi data diri lengkap untuk mendaftar lomba 17 Agustus.
+        Isi data diri untuk mendaftar lomba 17 Agustus.
       </p>
 
       <form onSubmit={onSubmit} className="mt-8 grid grid-cols-1 gap-6">
@@ -109,30 +166,6 @@ export default function DaftarPage() {
             />
           </div>
           <div>
-            <label className="text-sm font-medium">Email *</label>
-            <input
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              type="email"
-              className="mt-2 w-full rounded-md border border-black/10 dark:border-white/15 bg-white/60 dark:bg-white/[0.04] px-4 py-2.5 outline-none focus:ring-2 focus:ring-red-500"
-              placeholder="budi@email.com"
-              required
-            />
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label className="text-sm font-medium">Nomor Telepon *</label>
-            <input
-              value={noTelepon}
-              onChange={(e) => setNoTelepon(e.target.value)}
-              className="mt-2 w-full rounded-md border border-black/10 dark:border-white/15 bg-white/60 dark:bg-white/[0.04] px-4 py-2.5 outline-none focus:ring-2 focus:ring-red-500"
-              placeholder="08xxxxxxxxxx"
-              required
-            />
-          </div>
-          <div>
             <label className="text-sm font-medium">Jenis Lomba *</label>
             <select
               value={jenisLomba}
@@ -142,35 +175,59 @@ export default function DaftarPage() {
             >
               <option value="">Pilih Jenis Lomba</option>
               {availableLomba.map((lomba) => (
-                <option key={lomba} value={lomba}>
-                  {lomba}
+                <option key={lomba.id} value={lomba.id}>
+                  {lomba.name} ({lomba.description})
                 </option>
               ))}
             </select>
           </div>
         </div>
 
-        <div>
-          <label className="text-sm font-medium">Alamat Lengkap *</label>
-          <textarea
-            value={alamat}
-            onChange={(e) => setAlamat(e.target.value)}
-            rows={3}
-            className="mt-2 w-full rounded-md border border-black/10 dark:border-white/15 bg-white/60 dark:bg-white/[0.04] px-4 py-2.5 outline-none focus:ring-2 focus:ring-red-500"
-            placeholder="Jl. Contoh No. 123, Kota, Provinsi"
-            required
-          />
-        </div>
-
-        <div>
-          <label className="text-sm font-medium">Catatan (Opsional)</label>
-          <textarea
-            value={catatan}
-            onChange={(e) => setCatatan(e.target.value)}
-            rows={2}
-            className="mt-2 w-full rounded-md border border-black/10 dark:border-white/15 bg-white/60 dark:bg-white/[0.04] px-4 py-2.5 outline-none focus:ring-2 focus:ring-red-500"
-            placeholder="Tambahan informasi atau catatan khusus"
-          />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label className="text-sm font-medium">
+              Usia *
+              {selectedLomba && (
+                <span className="text-xs text-gray-500 ml-2">
+                  ({selectedLomba.minAge}-{selectedLomba.maxAge} tahun)
+                </span>
+              )}
+            </label>
+            <input
+              value={usia}
+              onChange={(e) =>
+                setUsia(e.target.value ? Number(e.target.value) : "")
+              }
+              type="number"
+              min={selectedLomba?.minAge || 5}
+              max={selectedLomba?.maxAge || 100}
+              className="mt-2 w-full rounded-md border border-black/10 dark:border-white/15 bg-white/60 dark:bg-white/[0.04] px-4 py-2.5 outline-none focus:ring-2 focus:ring-red-500"
+              placeholder={
+                selectedLomba
+                  ? `Min: ${selectedLomba.minAge}, Max: ${selectedLomba.maxAge}`
+                  : "Pilih lomba dulu"
+              }
+              required
+              disabled={!jenisLomba}
+            />
+            {selectedLomba && (
+              <p className="mt-1 text-xs text-gray-500">
+                Usia yang diizinkan: {selectedLomba.minAge}-
+                {selectedLomba.maxAge} tahun
+              </p>
+            )}
+          </div>
+          <div>
+            <label className="text-sm font-medium">
+              Nomor Telepon (Opsional)
+            </label>
+            <input
+              value={noTelepon}
+              onChange={(e) => setNoTelepon(e.target.value)}
+              className="mt-2 w-full rounded-md border border-black/10 dark:border-white/15 bg-white/60 dark:bg-white/[0.04] px-4 py-2.5 outline-none focus:ring-2 focus:ring-red-500"
+              placeholder="08xxxxxxxxxx"
+            />
+          </div>
         </div>
 
         {error && (
@@ -184,7 +241,7 @@ export default function DaftarPage() {
           <button
             type="submit"
             disabled={
-              saving || !nama || !email || !noTelepon || !alamat || !jenisLomba
+              saving || !nama || typeof usia !== "number" || !jenisLomba
             }
             className="inline-flex items-center justify-center rounded-md bg-red-600 text-white px-5 py-2.5 text-sm font-medium shadow-sm hover:bg-red-700 disabled:opacity-60 disabled:cursor-not-allowed"
           >

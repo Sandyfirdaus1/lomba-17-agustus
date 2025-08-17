@@ -5,6 +5,20 @@ import { competitionsForAge, competitions } from "@/lib/competitions";
 import { Check, Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
 
+// Define proper types for participant data
+interface Peserta {
+  _id: string;
+  nama: string;
+  email: string;
+  noTelepon: string;
+  usia: number;
+  alamat: string;
+  jenisLomba: string;
+  catatan?: string;
+  tanggalDaftar: string;
+  status: string;
+}
+
 export default function DaftarPage() {
   const [name, setName] = useState("");
   const [age, setAge] = useState<number | "">("");
@@ -46,7 +60,7 @@ export default function DaftarPage() {
         const data = await response.json();
 
         if (data.success) {
-          const existingPeserta = data.data;
+          const existingPeserta: Peserta[] = data.data;
           const duplicateLombas = [];
 
           for (const competitionId of selected) {
@@ -57,7 +71,7 @@ export default function DaftarPage() {
 
             // Check for exact duplicate: same name, same lomba, same age
             const exactDuplicate = existingPeserta.find(
-              (p: any) =>
+              (p: Peserta) =>
                 p.nama.toLowerCase().trim() === name.toLowerCase().trim() &&
                 p.jenisLomba === competition.name &&
                 p.usia === age
@@ -77,7 +91,7 @@ export default function DaftarPage() {
           } else {
             // Check if there are participants with same name but different ages
             const sameNameDifferentAge = existingPeserta.find(
-              (p: any) =>
+              (p: Peserta) =>
                 p.nama.toLowerCase().trim() === name.toLowerCase().trim() &&
                 p.usia !== age
             );
@@ -238,8 +252,8 @@ export default function DaftarPage() {
               errorMessage = `Validasi gagal: ${errorData.errors.join(", ")}`;
             } else if (errorData.missingFields) {
               const missingFields = Object.entries(errorData.missingFields)
-                .filter(([_, value]) => value !== null)
-                .map(([_, value]) => value)
+                .filter(([, value]) => value !== null)
+                .map(([, value]) => value)
                 .join(", ");
               errorMessage = `Field yang kurang: ${missingFields}`;
             } else if (errorData.duplicateField === "nama") {

@@ -1338,7 +1338,15 @@ export default function AdminPage() {
                     setEditingPeserta({
                       ...editingPeserta,
                       noTelepon: e.target.value,
-                    })
+                      nama: editingPeserta?.nama || "",
+                      usia: editingPeserta?.usia || 0,
+                      jenisLomba: editingPeserta?.jenisLomba || "",
+                      tanggalDaftar: editingPeserta?.tanggalDaftar || "",
+                      status:
+                        editingPeserta?.status || "Lolos ke Babak Selanjutnya",
+                      email: editingPeserta?.email || "",
+                      alamat: editingPeserta?.alamat || "",
+                    } as Peserta)
                   }
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:ring-2 focus:ring-red-500 focus:border-transparent"
                   placeholder="No. Telepon peserta"
@@ -1354,7 +1362,15 @@ export default function AdminPage() {
                     setEditingPeserta({
                       ...editingPeserta,
                       usia: Number(e.target.value),
-                    })
+                      nama: editingPeserta?.nama || "",
+                      noTelepon: editingPeserta?.noTelepon || "",
+                      jenisLomba: editingPeserta?.jenisLomba || "",
+                      tanggalDaftar: editingPeserta?.tanggalDaftar || "",
+                      status:
+                        editingPeserta?.status || "Lolos ke Babak Selanjutnya",
+                      email: editingPeserta?.email || "",
+                      alamat: editingPeserta?.alamat || "",
+                    } as Peserta)
                   }
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:ring-2 focus:ring-red-500 focus:border-transparent"
                   required
@@ -1371,7 +1387,15 @@ export default function AdminPage() {
                     setEditingPeserta({
                       ...editingPeserta,
                       jenisLomba: e.target.value,
-                    })
+                      nama: editingPeserta?.nama || "",
+                      noTelepon: editingPeserta?.noTelepon || "",
+                      usia: editingPeserta?.usia || 0,
+                      tanggalDaftar: editingPeserta?.tanggalDaftar || "",
+                      status:
+                        editingPeserta?.status || "Lolos ke Babak Selanjutnya",
+                      email: editingPeserta?.email || "",
+                      alamat: editingPeserta?.alamat || "",
+                    } as Peserta)
                   }
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:ring-2 focus:ring-red-500 focus:border-transparent"
                   placeholder="Contoh: Balap Karung, Tarik Tambang"
@@ -1389,7 +1413,15 @@ export default function AdminPage() {
                     setEditingPeserta({
                       ...editingPeserta,
                       tanggalDaftar: e.target.value,
-                    })
+                      nama: editingPeserta?.nama || "",
+                      noTelepon: editingPeserta?.noTelepon || "",
+                      usia: editingPeserta?.usia || 0,
+                      jenisLomba: editingPeserta?.jenisLomba || "",
+                      status:
+                        editingPeserta?.status || "Lolos ke Babak Selanjutnya",
+                      email: editingPeserta?.email || "",
+                      alamat: editingPeserta?.alamat || "",
+                    } as Peserta)
                   }
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:ring-2 focus:ring-red-500 focus:border-transparent"
                   required
@@ -1403,7 +1435,14 @@ export default function AdminPage() {
                     setEditingPeserta({
                       ...editingPeserta,
                       status: e.target.value,
-                    })
+                      nama: editingPeserta?.nama || "",
+                      noTelepon: editingPeserta?.noTelepon || "",
+                      usia: editingPeserta?.usia || 0,
+                      jenisLomba: editingPeserta?.jenisLomba || "",
+                      tanggalDaftar: editingPeserta?.tanggalDaftar || "",
+                      email: editingPeserta?.email || "",
+                      alamat: editingPeserta?.alamat || "",
+                    } as Peserta)
                   }
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:ring-2 focus:ring-red-500 focus:border-transparent"
                   required
@@ -1424,7 +1463,15 @@ export default function AdminPage() {
                     setEditingPeserta({
                       ...editingPeserta,
                       alamat: e.target.value,
-                    })
+                      nama: editingPeserta?.nama || "",
+                      noTelepon: editingPeserta?.noTelepon || "",
+                      usia: editingPeserta?.usia || 0,
+                      jenisLomba: editingPeserta?.jenisLomba || "",
+                      tanggalDaftar: editingPeserta?.tanggalDaftar || "",
+                      status:
+                        editingPeserta?.status || "Lolos ke Babak Selanjutnya",
+                      email: editingPeserta?.email || "",
+                    } as Peserta)
                   }
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:ring-2 focus:ring-red-500 focus:border-transparent"
                   placeholder="Alamat peserta"
@@ -1441,7 +1488,16 @@ export default function AdminPage() {
                     setEditingPeserta({
                       ...editingPeserta,
                       babak: e.target.value,
-                    })
+                      nama: editingPeserta?.nama || "",
+                      noTelepon: editingPeserta?.noTelepon || "",
+                      usia: editingPeserta?.usia || 0,
+                      jenisLomba: editingPeserta?.jenisLomba || "",
+                      tanggalDaftar: editingPeserta?.tanggalDaftar || "",
+                      status:
+                        editingPeserta?.status || "Lolos ke Babak Selanjutnya",
+                      email: editingPeserta?.email || "",
+                      alamat: editingPeserta?.alamat || "",
+                    } as Peserta)
                   }
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:ring-2 focus:ring-red-500 focus:border-transparent"
                   placeholder="Contoh: Babak 1, Final"
@@ -1458,7 +1514,16 @@ export default function AdminPage() {
                     setEditingPeserta({
                       ...editingPeserta,
                       skor: Number(e.target.value),
-                    })
+                      nama: editingPeserta?.nama || "",
+                      noTelepon: editingPeserta?.noTelepon || "",
+                      usia: editingPeserta?.usia || 0,
+                      jenisLomba: editingPeserta?.jenisLomba || "",
+                      tanggalDaftar: editingPeserta?.tanggalDaftar || "",
+                      status:
+                        editingPeserta?.status || "Lolos ke Babak Selanjutnya",
+                      email: editingPeserta?.email || "",
+                      alamat: editingPeserta?.alamat || "",
+                    } as Peserta)
                   }
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:ring-2 focus:ring-red-500 focus:border-transparent"
                   placeholder="Skor peserta"

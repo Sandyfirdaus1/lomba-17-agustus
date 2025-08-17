@@ -911,6 +911,7 @@ export default function AdminPage() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="semua">Semua Status</SelectItem>
+                  <SelectItem value="Terdaftar">Terdaftar</SelectItem>
                   <SelectItem value="Lolos ke Babak Selanjutnya">
                     Lolos
                   </SelectItem>
@@ -1291,8 +1292,7 @@ export default function AdminPage() {
                       usia: editingPeserta?.usia || 0,
                       jenisLomba: editingPeserta?.jenisLomba || "",
                       tanggalDaftar: editingPeserta?.tanggalDaftar || "",
-                      status:
-                        editingPeserta?.status || "Lolos ke Babak Selanjutnya",
+                      status: editingPeserta?.status || "Terdaftar",
                       email: editingPeserta?.email || "",
                       alamat: editingPeserta?.alamat || "",
                     } as Peserta)
@@ -1318,8 +1318,7 @@ export default function AdminPage() {
                       usia: editingPeserta?.usia || 0,
                       jenisLomba: editingPeserta?.jenisLomba || "",
                       tanggalDaftar: editingPeserta?.tanggalDaftar || "",
-                      status:
-                        editingPeserta?.status || "Lolos ke Babak Selanjutnya",
+                      status: editingPeserta?.status || "Terdaftar",
                       alamat: editingPeserta?.alamat || "",
                     })
                   }
@@ -1342,8 +1341,7 @@ export default function AdminPage() {
                       usia: editingPeserta?.usia || 0,
                       jenisLomba: editingPeserta?.jenisLomba || "",
                       tanggalDaftar: editingPeserta?.tanggalDaftar || "",
-                      status:
-                        editingPeserta?.status || "Lolos ke Babak Selanjutnya",
+                      status: editingPeserta?.status || "Terdaftar",
                       email: editingPeserta?.email || "",
                       alamat: editingPeserta?.alamat || "",
                     } as Peserta)
@@ -1366,8 +1364,7 @@ export default function AdminPage() {
                       noTelepon: editingPeserta?.noTelepon || "",
                       jenisLomba: editingPeserta?.jenisLomba || "",
                       tanggalDaftar: editingPeserta?.tanggalDaftar || "",
-                      status:
-                        editingPeserta?.status || "Lolos ke Babak Selanjutnya",
+                      status: editingPeserta?.status || "Terdaftar",
                       email: editingPeserta?.email || "",
                       alamat: editingPeserta?.alamat || "",
                     } as Peserta)
@@ -1391,8 +1388,7 @@ export default function AdminPage() {
                       noTelepon: editingPeserta?.noTelepon || "",
                       usia: editingPeserta?.usia || 0,
                       tanggalDaftar: editingPeserta?.tanggalDaftar || "",
-                      status:
-                        editingPeserta?.status || "Lolos ke Babak Selanjutnya",
+                      status: editingPeserta?.status || "Terdaftar",
                       email: editingPeserta?.email || "",
                       alamat: editingPeserta?.alamat || "",
                     } as Peserta)
@@ -1417,8 +1413,7 @@ export default function AdminPage() {
                       noTelepon: editingPeserta?.noTelepon || "",
                       usia: editingPeserta?.usia || 0,
                       jenisLomba: editingPeserta?.jenisLomba || "",
-                      status:
-                        editingPeserta?.status || "Lolos ke Babak Selanjutnya",
+                      status: editingPeserta?.status || "Terdaftar",
                       email: editingPeserta?.email || "",
                       alamat: editingPeserta?.alamat || "",
                     } as Peserta)
@@ -1430,7 +1425,7 @@ export default function AdminPage() {
               <div>
                 <label className="block text-sm font-medium mb-2">Status</label>
                 <select
-                  value={editingPeserta?.status || "Lolos ke Babak Selanjutnya"}
+                  value={editingPeserta?.status || "Terdaftar"}
                   onChange={(e) =>
                     setEditingPeserta({
                       ...editingPeserta,
@@ -1447,6 +1442,7 @@ export default function AdminPage() {
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:ring-2 focus:ring-red-500 focus:border-transparent"
                   required
                 >
+                  <option value="Terdaftar">Terdaftar</option>
                   <option value="Lolos ke Babak Selanjutnya">Lolos</option>
                   <option value="Juara 1">Juara 1</option>
                   <option value="Juara 2">Juara 2</option>
@@ -1468,8 +1464,7 @@ export default function AdminPage() {
                       usia: editingPeserta?.usia || 0,
                       jenisLomba: editingPeserta?.jenisLomba || "",
                       tanggalDaftar: editingPeserta?.tanggalDaftar || "",
-                      status:
-                        editingPeserta?.status || "Lolos ke Babak Selanjutnya",
+                      status: editingPeserta?.status || "Terdaftar",
                       email: editingPeserta?.email || "",
                     } as Peserta)
                   }
@@ -1493,8 +1488,7 @@ export default function AdminPage() {
                       usia: editingPeserta?.usia || 0,
                       jenisLomba: editingPeserta?.jenisLomba || "",
                       tanggalDaftar: editingPeserta?.tanggalDaftar || "",
-                      status:
-                        editingPeserta?.status || "Lolos ke Babak Selanjutnya",
+                      status: editingPeserta?.status || "Terdaftar",
                       email: editingPeserta?.email || "",
                       alamat: editingPeserta?.alamat || "",
                     } as Peserta)
@@ -1519,8 +1513,7 @@ export default function AdminPage() {
                       usia: editingPeserta?.usia || 0,
                       jenisLomba: editingPeserta?.jenisLomba || "",
                       tanggalDaftar: editingPeserta?.tanggalDaftar || "",
-                      status:
-                        editingPeserta?.status || "Lolos ke Babak Selanjutnya",
+                      status: editingPeserta?.status || "Terdaftar",
                       email: editingPeserta?.email || "",
                       alamat: editingPeserta?.alamat || "",
                     } as Peserta)

@@ -174,6 +174,8 @@ export default function DaftarPeserta() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
+      case "Terdaftar":
+        return "bg-blue-200 text-blue-900 border border-blue-300";
       case "Diskualifikasi":
         return "bg-red-200 text-red-900 border border-red-300";
       case "Juara 1":

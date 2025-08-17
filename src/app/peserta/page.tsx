@@ -1,13 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import {
-  competitionsForAge,
-  competitions,
-  setAdminStatus,
-} from "@/lib/competitions";
-import { Check, Loader2 } from "lucide-react";
-import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -18,14 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  RefreshCw,
-  Users,
-  Phone,
-  Calendar,
-  Trash2,
-  Shield,
-} from "lucide-react";
+import { RefreshCw, Users, Phone, Calendar, Trash2 } from "lucide-react";
 import ClientOnly from "@/components/ClientOnly";
 
 interface Peserta {
@@ -236,41 +222,6 @@ export default function DaftarPeserta() {
             <p className="text-lg text-gray-600">
               Lihat semua peserta yang telah mendaftar secara realtime
             </p>
-
-            {/* Admin Toggle for Testing */}
-            <div className="mt-4 flex items-center justify-center gap-4">
-              <div className="flex items-center gap-2">
-                <label className="text-sm font-medium text-gray-700">
-                  Mode Admin:
-                </label>
-                <button
-                  onClick={() => {
-                    const newStatus = !isAdmin;
-                    setIsAdmin(newStatus);
-                    setAdminStatus(newStatus);
-
-                    // Show feedback
-                    alert(
-                      `Mode Admin ${newStatus ? "diaktifkan" : "dinonaktifkan"}`
-                    );
-                  }}
-                  className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
-                    isAdmin
-                      ? "bg-yellow-100 text-yellow-800 border border-yellow-300"
-                      : "bg-gray-100 text-gray-800 border border-gray-300"
-                  }`}
-                >
-                  {isAdmin ? "Aktif" : "Nonaktif"}
-                </button>
-              </div>
-
-              {isAdmin && (
-                <div className="inline-flex items-center gap-2 bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full">
-                  <Shield className="h-4 w-4" />
-                  <span className="text-sm font-medium">Mode Admin Aktif</span>
-                </div>
-              )}
-            </div>
           </div>
 
           {/* Stats */}

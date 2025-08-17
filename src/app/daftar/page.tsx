@@ -216,12 +216,9 @@ export default function DaftarPage() {
 
         const pesertaData = {
           nama: name.trim(),
-          email: `${name.toLowerCase().replace(/\s+/g, ".")}@example.com`, // Generate email dummy
           noTelepon: phone.trim() || "Tidak ada",
           usia: age,
-          alamat: "Alamat akan diisi nanti", // Default alamat
           jenisLomba: competition.name,
-          catatan: `Mendaftar melalui form online - Lomba: ${competition.name}`,
         };
 
         try {
@@ -243,9 +240,7 @@ export default function DaftarPage() {
             const errorData = await response.json().catch(() => ({}));
             console.error(`Backend error for ${competition.name}:`, errorData);
 
-            let errorMessage =
-              errorData.message ||
-              `HTTP ${response.status}: ${response.statusText}`;
+            let errorMessage = "Terjadi kesalahan saat mendaftar";
 
             // Show specific validation errors if available
             if (errorData.errors && Array.isArray(errorData.errors)) {
@@ -258,9 +253,19 @@ export default function DaftarPage() {
               errorMessage = `Field yang kurang: ${missingFields}`;
             } else if (errorData.duplicateField === "nama") {
               // Special handling for duplicate name
-              errorMessage = `⚠️ ${errorData.message}\n\nNama "${errorData.duplicateValue}" sudah terdaftar untuk lomba "${errorData.duplicateLomba}". Silakan pilih lomba lain atau gunakan nama yang berbeda.`;
+              errorMessage = `⚠️ ${errorData.message}\n\nNama "${errorData.duplicateValue}" sudah terdaftar untuk lomba "${errorData.duplicateLomba}". Silakan pilih lomba lain atau gunakan usia yang berbeda.`;
             } else if (errorData.duplicateField === "email") {
               errorMessage = `⚠️ Email "${errorData.duplicateValue}" sudah terdaftar sebelumnya.`;
+            } else if (errorData.message) {
+              errorMessage = errorData.message;
+            } else if (response.status === 400) {
+              errorMessage = `Data tidak valid untuk lomba ${competition.name}`;
+            } else if (response.status === 409) {
+              errorMessage = `Data sudah ada untuk lomba ${competition.name}`;
+            } else if (response.status >= 500) {
+              errorMessage = `Server error untuk lomba ${competition.name}. Silakan coba lagi nanti.`;
+            } else {
+              errorMessage = `Error ${response.status}: ${response.statusText} untuk lomba ${competition.name}`;
             }
 
             throw new Error(errorMessage);

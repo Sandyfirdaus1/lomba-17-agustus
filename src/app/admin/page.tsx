@@ -38,7 +38,7 @@ import {
 } from "@/components/ui/select";
 
 interface Peserta {
-  _id: string;
+  _id?: string;
   nama: string;
   noTelepon: string;
   usia: number;
@@ -185,7 +185,7 @@ export default function AdminPage() {
 
   // Handle save peserta
   const handleSavePeserta = async () => {
-    if (!editingPeserta) return;
+    if (!editingPeserta || !editingPeserta._id) return;
 
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
@@ -202,7 +202,9 @@ export default function AdminPage() {
 
       if (response.ok) {
         setPeserta((prev) =>
-          prev.map((p) => (p._id === editingPeserta._id ? editingPeserta : p))
+          prev.map((p) =>
+            p._id === editingPeserta._id ? (editingPeserta as Peserta) : p
+          )
         );
         setEditingPeserta(null);
         alert("Data peserta berhasil diupdate");
@@ -264,8 +266,15 @@ export default function AdminPage() {
       }
     } catch (error) {
       console.error("Error performing quick action:", error);
-      console.error("Error stack:", error.stack);
-      alert(`Gagal melakukan tindakan: ${error.message}`);
+      if (error instanceof Error) {
+        console.error("Error stack:", error.stack);
+        alert(`Gagal melakukan tindakan: ${error.message}`);
+      } else {
+        console.error("Unknown error:", error);
+        alert(
+          "Gagal melakukan tindakan: Terjadi kesalahan yang tidak diketahui"
+        );
+      }
     }
   };
 
@@ -867,7 +876,7 @@ export default function AdminPage() {
                       <Edit className="h-4 w-4" />
                     </button>
                     <button
-                      onClick={() => handleDeletePeserta(p._id)}
+                      onClick={() => handleDeletePeserta(p._id || "")}
                       disabled={deletingPesertaId === p._id}
                       className="p-2 text-gray-500 hover:text-red-600"
                       title="Hapus peserta"
@@ -952,35 +961,43 @@ export default function AdminPage() {
                       <div className="flex flex-wrap gap-2">
                         <Button
                           size="sm"
-                          onClick={() => handleQuickAction(p._id, "Lolos")}
+                          onClick={() =>
+                            handleQuickAction(p._id || "", "Lolos")
+                          }
                           className="bg-green-600 hover:bg-green-700 text-white"
                         >
                           Lolos
                         </Button>
                         <Button
                           size="sm"
-                          onClick={() => handleQuickAction(p._id, "Juara 1")}
+                          onClick={() =>
+                            handleQuickAction(p._id || "", "Juara 1")
+                          }
                           className="bg-yellow-600 hover:bg-yellow-700 text-white"
                         >
                           Juara 1
                         </Button>
                         <Button
                           size="sm"
-                          onClick={() => handleQuickAction(p._id, "Juara 2")}
+                          onClick={() =>
+                            handleQuickAction(p._id || "", "Juara 2")
+                          }
                           className="bg-gray-600 hover:bg-gray-700 text-white"
                         >
                           Juara 2
                         </Button>
                         <Button
                           size="sm"
-                          onClick={() => handleQuickAction(p._id, "Juara 3")}
+                          onClick={() =>
+                            handleQuickAction(p._id || "", "Juara 3")
+                          }
                           className="bg-orange-600 hover:bg-orange-700 text-white"
                         >
                           Juara 3
                         </Button>
                         <Button
                           size="sm"
-                          onClick={() => handleQuickAction(p._id, "DQ")}
+                          onClick={() => handleQuickAction(p._id || "", "DQ")}
                           className="bg-red-600 hover:bg-red-700 text-white"
                         >
                           DQ
@@ -1270,7 +1287,15 @@ export default function AdminPage() {
                     setEditingPeserta({
                       ...editingPeserta,
                       nama: e.target.value,
-                    })
+                      noTelepon: editingPeserta?.noTelepon || "",
+                      usia: editingPeserta?.usia || 0,
+                      jenisLomba: editingPeserta?.jenisLomba || "",
+                      tanggalDaftar: editingPeserta?.tanggalDaftar || "",
+                      status:
+                        editingPeserta?.status || "Lolos ke Babak Selanjutnya",
+                      email: editingPeserta?.email || "",
+                      alamat: editingPeserta?.alamat || "",
+                    } as Peserta)
                   }
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:ring-2 focus:ring-red-500 focus:border-transparent"
                   placeholder="Nama peserta"
@@ -1288,6 +1313,14 @@ export default function AdminPage() {
                     setEditingPeserta({
                       ...editingPeserta,
                       email: e.target.value,
+                      nama: editingPeserta?.nama || "",
+                      noTelepon: editingPeserta?.noTelepon || "",
+                      usia: editingPeserta?.usia || 0,
+                      jenisLomba: editingPeserta?.jenisLomba || "",
+                      tanggalDaftar: editingPeserta?.tanggalDaftar || "",
+                      status:
+                        editingPeserta?.status || "Lolos ke Babak Selanjutnya",
+                      alamat: editingPeserta?.alamat || "",
                     })
                   }
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:ring-2 focus:ring-red-500 focus:border-transparent"

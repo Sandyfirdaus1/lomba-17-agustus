@@ -73,6 +73,7 @@ export default function AdminPage() {
   const [showAddAgeGroup, setShowAddAgeGroup] = useState(false);
   const [showAddCompetition, setShowAddCompetition] = useState(false);
   const [showAddPeserta, setShowAddPeserta] = useState(false);
+  const [showEditPeserta, setShowEditPeserta] = useState(false);
 
   // State untuk peserta
   const [peserta, setPeserta] = useState<Peserta[]>([]);
@@ -178,6 +179,7 @@ export default function AdminPage() {
   // Handle edit peserta
   const handleEditPeserta = (peserta: Peserta) => {
     setEditingPeserta({ ...peserta });
+    setShowEditPeserta(true);
   };
 
   // Handle save peserta
@@ -204,6 +206,7 @@ export default function AdminPage() {
           )
         );
         setEditingPeserta(null);
+        setShowEditPeserta(false);
         alert("Data peserta berhasil diupdate");
       } else {
         throw new Error("Gagal update data peserta");
@@ -836,13 +839,6 @@ export default function AdminPage() {
         <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-6 mb-6">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-semibold">Manajemen Peserta</h2>
-            <button
-              onClick={() => setShowAddPeserta(true)}
-              className="inline-flex items-center gap-2 px-3 py-2 bg-red-600 text-white rounded-md text-sm font-medium hover:bg-red-700"
-            >
-              <Plus className="h-4 w-4" />
-              Tambah Peserta
-            </button>
           </div>
 
           {loadingPeserta ? (
@@ -1446,6 +1442,173 @@ export default function AdminPage() {
                   className="flex-1 px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700"
                 >
                   Tambah
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Edit Peserta */}
+      {showEditPeserta && editingPeserta && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-gray-900 rounded-lg shadow-xl max-w-md w-full p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold flex items-center gap-2">
+                <Edit className="h-5 w-5 text-red-600" />
+                Edit Peserta
+              </h3>
+              <button
+                onClick={() => setShowEditPeserta(false)}
+                className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleSavePeserta();
+              }}
+              className="space-y-4"
+            >
+              <div>
+                <label className="block text-sm font-medium mb-2">Nama</label>
+                <input
+                  type="text"
+                  value={editingPeserta.nama}
+                  onChange={(e) =>
+                    setEditingPeserta({
+                      ...editingPeserta,
+                      nama: e.target.value,
+                    })
+                  }
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                  placeholder="Nama peserta"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-2">
+                  No. Telepon
+                </label>
+                <input
+                  type="text"
+                  value={editingPeserta.noTelepon}
+                  onChange={(e) =>
+                    setEditingPeserta({
+                      ...editingPeserta,
+                      noTelepon: e.target.value,
+                    })
+                  }
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                  placeholder="No. Telepon peserta"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-2">Usia</label>
+                <input
+                  type="number"
+                  value={editingPeserta.usia}
+                  onChange={(e) =>
+                    setEditingPeserta({
+                      ...editingPeserta,
+                      usia: Number(e.target.value),
+                    })
+                  }
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-2">
+                  Jenis Lomba
+                </label>
+                <input
+                  type="text"
+                  value={editingPeserta.jenisLomba}
+                  onChange={(e) =>
+                    setEditingPeserta({
+                      ...editingPeserta,
+                      jenisLomba: e.target.value,
+                    })
+                  }
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                  placeholder="Contoh: Balap Karung, Tarik Tambang"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-2">
+                  Tanggal Daftar
+                </label>
+                <input
+                  type="date"
+                  value={editingPeserta.tanggalDaftar}
+                  onChange={(e) =>
+                    setEditingPeserta({
+                      ...editingPeserta,
+                      tanggalDaftar: e.target.value,
+                    })
+                  }
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-2">Status</label>
+                <select
+                  value={editingPeserta.status}
+                  onChange={(e) =>
+                    setEditingPeserta({
+                      ...editingPeserta,
+                      status: e.target.value,
+                    })
+                  }
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                  required
+                >
+                  <option value="Terdaftar">Terdaftar</option>
+                  <option value="Lolos ke Babak Selanjutnya">Lolos</option>
+                  <option value="Juara 1">Juara 1</option>
+                  <option value="Juara 2">Juara 2</option>
+                  <option value="Juara 3">Juara 3</option>
+                  <option value="Diskualifikasi">Diskualifikasi</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-2">
+                  Catatan (opsional)
+                </label>
+                <input
+                  type="text"
+                  value={editingPeserta.catatan || ""}
+                  onChange={(e) =>
+                    setEditingPeserta({
+                      ...editingPeserta,
+                      catatan: e.target.value,
+                    })
+                  }
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                  placeholder="Catatan tambahan"
+                />
+              </div>
+
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={() => setShowEditPeserta(false)}
+                  className="flex-1 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700"
+                >
+                  Batal
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700"
+                >
+                  Simpan
                 </button>
               </div>
             </form>

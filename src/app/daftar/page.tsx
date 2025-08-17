@@ -81,8 +81,11 @@ export default function DaftarPage() {
       // Gunakan environment variable atau fallback ke localhost
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
+      console.log("🔗 Connecting to API:", apiUrl);
+
       // Test koneksi ke backend terlebih dahulu
       try {
+        console.log("🏥 Testing backend health...");
         const testResponse = await fetch(`${apiUrl}/health`, {
           method: "GET",
           headers: {
@@ -90,15 +93,26 @@ export default function DaftarPage() {
           },
         });
 
+        console.log("🏥 Health check response:", {
+          status: testResponse.status,
+          ok: testResponse.ok,
+          statusText: testResponse.statusText,
+        });
+
         if (!testResponse.ok) {
           throw new Error(
             `Backend tidak dapat diakses (Status: ${testResponse.status})`
           );
         }
+
+        const healthData = await testResponse.json();
+        console.log("🏥 Health check data:", healthData);
       } catch (testError) {
-        console.error("Backend connection test failed:", testError);
+        console.error("❌ Backend connection test failed:", testError);
+        const errorMessage =
+          testError instanceof Error ? testError.message : String(testError);
         throw new Error(
-          `Tidak dapat terhubung ke backend. Pastikan backend berjalan di ${apiUrl}`
+          `Tidak dapat terhubung ke backend. Pastikan backend berjalan di ${apiUrl}. Error: ${errorMessage}`
         );
       }
 

@@ -45,10 +45,7 @@ interface Peserta {
   jenisLomba: string;
   tanggalDaftar: string;
   status: string;
-  email: string;
-  alamat: string;
-  babak?: string;
-  skor?: number;
+  catatan?: string;
 }
 
 const iconByGroup: Record<
@@ -948,14 +945,6 @@ export default function AdminPage() {
                       <p className="text-sm text-gray-600 truncate">
                         {p.jenisLomba} • {p.status}
                       </p>
-                      {p.babak && p.babak !== "Penyisihan" && (
-                        <p className="text-xs text-blue-600">
-                          Babak: {p.babak}
-                        </p>
-                      )}
-                      {p.skor !== undefined && p.skor > 0 && (
-                        <p className="text-xs text-green-600">Skor: {p.skor}</p>
-                      )}
                     </div>
                     <div className="flex items-center gap-2 flex-shrink-0">
                       {/* Quick Actions */}
@@ -1293,37 +1282,12 @@ export default function AdminPage() {
                       jenisLomba: editingPeserta?.jenisLomba || "",
                       tanggalDaftar: editingPeserta?.tanggalDaftar || "",
                       status: editingPeserta?.status || "Terdaftar",
-                      email: editingPeserta?.email || "",
-                      alamat: editingPeserta?.alamat || "",
+                      catatan: editingPeserta?.catatan || "",
                     } as Peserta)
                   }
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:ring-2 focus:ring-red-500 focus:border-transparent"
                   placeholder="Nama peserta"
                   required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-2">
-                  Email (opsional)
-                </label>
-                <input
-                  type="email"
-                  value={editingPeserta?.email || ""}
-                  onChange={(e) =>
-                    setEditingPeserta({
-                      ...editingPeserta,
-                      email: e.target.value,
-                      nama: editingPeserta?.nama || "",
-                      noTelepon: editingPeserta?.noTelepon || "",
-                      usia: editingPeserta?.usia || 0,
-                      jenisLomba: editingPeserta?.jenisLomba || "",
-                      tanggalDaftar: editingPeserta?.tanggalDaftar || "",
-                      status: editingPeserta?.status || "Terdaftar",
-                      alamat: editingPeserta?.alamat || "",
-                    })
-                  }
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:ring-2 focus:ring-red-500 focus:border-transparent"
-                  placeholder="Email peserta"
                 />
               </div>
               <div>
@@ -1342,8 +1306,7 @@ export default function AdminPage() {
                       jenisLomba: editingPeserta?.jenisLomba || "",
                       tanggalDaftar: editingPeserta?.tanggalDaftar || "",
                       status: editingPeserta?.status || "Terdaftar",
-                      email: editingPeserta?.email || "",
-                      alamat: editingPeserta?.alamat || "",
+                      catatan: editingPeserta?.catatan || "",
                     } as Peserta)
                   }
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:ring-2 focus:ring-red-500 focus:border-transparent"
@@ -1365,8 +1328,7 @@ export default function AdminPage() {
                       jenisLomba: editingPeserta?.jenisLomba || "",
                       tanggalDaftar: editingPeserta?.tanggalDaftar || "",
                       status: editingPeserta?.status || "Terdaftar",
-                      email: editingPeserta?.email || "",
-                      alamat: editingPeserta?.alamat || "",
+                      catatan: editingPeserta?.catatan || "",
                     } as Peserta)
                   }
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:ring-2 focus:ring-red-500 focus:border-transparent"
@@ -1389,8 +1351,7 @@ export default function AdminPage() {
                       usia: editingPeserta?.usia || 0,
                       tanggalDaftar: editingPeserta?.tanggalDaftar || "",
                       status: editingPeserta?.status || "Terdaftar",
-                      email: editingPeserta?.email || "",
-                      alamat: editingPeserta?.alamat || "",
+                      catatan: editingPeserta?.catatan || "",
                     } as Peserta)
                   }
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:ring-2 focus:ring-red-500 focus:border-transparent"
@@ -1414,8 +1375,7 @@ export default function AdminPage() {
                       usia: editingPeserta?.usia || 0,
                       jenisLomba: editingPeserta?.jenisLomba || "",
                       status: editingPeserta?.status || "Terdaftar",
-                      email: editingPeserta?.email || "",
-                      alamat: editingPeserta?.alamat || "",
+                      catatan: editingPeserta?.catatan || "",
                     } as Peserta)
                   }
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:ring-2 focus:ring-red-500 focus:border-transparent"
@@ -1435,8 +1395,7 @@ export default function AdminPage() {
                       usia: editingPeserta?.usia || 0,
                       jenisLomba: editingPeserta?.jenisLomba || "",
                       tanggalDaftar: editingPeserta?.tanggalDaftar || "",
-                      email: editingPeserta?.email || "",
-                      alamat: editingPeserta?.alamat || "",
+                      catatan: editingPeserta?.catatan || "",
                     } as Peserta)
                   }
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:ring-2 focus:ring-red-500 focus:border-transparent"
@@ -1451,75 +1410,26 @@ export default function AdminPage() {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium mb-2">Alamat</label>
-                <input
-                  type="text"
-                  value={editingPeserta?.alamat || ""}
-                  onChange={(e) =>
-                    setEditingPeserta({
-                      ...editingPeserta,
-                      alamat: e.target.value,
-                      nama: editingPeserta?.nama || "",
-                      noTelepon: editingPeserta?.noTelepon || "",
-                      usia: editingPeserta?.usia || 0,
-                      jenisLomba: editingPeserta?.jenisLomba || "",
-                      tanggalDaftar: editingPeserta?.tanggalDaftar || "",
-                      status: editingPeserta?.status || "Terdaftar",
-                      email: editingPeserta?.email || "",
-                    } as Peserta)
-                  }
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:ring-2 focus:ring-red-500 focus:border-transparent"
-                  placeholder="Alamat peserta"
-                />
-              </div>
-              <div>
                 <label className="block text-sm font-medium mb-2">
-                  Babak (opsional)
+                  Catatan (opsional)
                 </label>
                 <input
                   type="text"
-                  value={editingPeserta?.babak || ""}
+                  value={editingPeserta?.catatan || ""}
                   onChange={(e) =>
                     setEditingPeserta({
                       ...editingPeserta,
-                      babak: e.target.value,
+                      catatan: e.target.value,
                       nama: editingPeserta?.nama || "",
                       noTelepon: editingPeserta?.noTelepon || "",
                       usia: editingPeserta?.usia || 0,
                       jenisLomba: editingPeserta?.jenisLomba || "",
                       tanggalDaftar: editingPeserta?.tanggalDaftar || "",
                       status: editingPeserta?.status || "Terdaftar",
-                      email: editingPeserta?.email || "",
-                      alamat: editingPeserta?.alamat || "",
                     } as Peserta)
                   }
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:ring-2 focus:ring-red-500 focus:border-transparent"
-                  placeholder="Contoh: Babak 1, Final"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-2">
-                  Skor (opsional)
-                </label>
-                <input
-                  type="number"
-                  value={editingPeserta?.skor || ""}
-                  onChange={(e) =>
-                    setEditingPeserta({
-                      ...editingPeserta,
-                      skor: Number(e.target.value),
-                      nama: editingPeserta?.nama || "",
-                      noTelepon: editingPeserta?.noTelepon || "",
-                      usia: editingPeserta?.usia || 0,
-                      jenisLomba: editingPeserta?.jenisLomba || "",
-                      tanggalDaftar: editingPeserta?.tanggalDaftar || "",
-                      status: editingPeserta?.status || "Terdaftar",
-                      email: editingPeserta?.email || "",
-                      alamat: editingPeserta?.alamat || "",
-                    } as Peserta)
-                  }
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:ring-2 focus:ring-red-500 focus:border-transparent"
-                  placeholder="Skor peserta"
+                  placeholder="Catatan tambahan"
                 />
               </div>
 

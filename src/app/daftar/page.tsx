@@ -14,6 +14,7 @@ export default function DaftarPage() {
   const [done, setDone] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [duplicateNameWarning, setDuplicateNameWarning] = useState<string>("");
 
   const available = useMemo(
     () => (typeof age === "number" ? competitionsForAge(age) : competitions),
@@ -30,6 +31,77 @@ export default function DaftarPage() {
     setErrors({});
   }, [age, available]);
 
+  // Check for duplicate names when name or selected competitions change
+  useEffect(() => {
+    const checkDuplicateNames = async () => {
+      if (!name.trim() || selected.length === 0) {
+        setDuplicateNameWarning("");
+        return;
+      }
+
+      try {
+        const apiUrl =
+          process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+        const response = await fetch(`${apiUrl}/api/peserta`);
+        const data = await response.json();
+
+        if (data.success) {
+          const existingPeserta = data.data;
+          const duplicateLombas = [];
+
+          for (const competitionId of selected) {
+            const competition = competitions.find(
+              (c) => c.id === competitionId
+            );
+            if (!competition) continue;
+
+            // Check for exact duplicate: same name, same lomba, same age
+            const exactDuplicate = existingPeserta.find(
+              (p: any) =>
+                p.nama.toLowerCase().trim() === name.toLowerCase().trim() &&
+                p.jenisLomba === competition.name &&
+                p.usia === age
+            );
+
+            if (exactDuplicate) {
+              duplicateLombas.push(competition.name);
+            }
+          }
+
+          if (duplicateLombas.length > 0) {
+            setDuplicateNameWarning(
+              `⚠️ Nama "${name}" dengan usia ${age} tahun sudah terdaftar untuk lomba: ${duplicateLombas.join(
+                ", "
+              )}. Silakan pilih lomba lain atau gunakan usia yang berbeda.`
+            );
+          } else {
+            // Check if there are participants with same name but different ages
+            const sameNameDifferentAge = existingPeserta.find(
+              (p: any) =>
+                p.nama.toLowerCase().trim() === name.toLowerCase().trim() &&
+                p.usia !== age
+            );
+
+            if (sameNameDifferentAge) {
+              setDuplicateNameWarning(
+                `ℹ️ Nama "${name}" sudah terdaftar dengan usia ${sameNameDifferentAge.usia} tahun. Anda bisa mendaftar dengan usia ${age} tahun.`
+              );
+            } else {
+              setDuplicateNameWarning("");
+            }
+          }
+        }
+      } catch (error) {
+        console.error("Error checking duplicate names:", error);
+        setDuplicateNameWarning("");
+      }
+    };
+
+    // Debounce the check to avoid too many API calls
+    const timeoutId = setTimeout(checkDuplicateNames, 500);
+    return () => clearTimeout(timeoutId);
+  }, [name, selected, age]);
+
   function validateForm() {
     const newErrors: { [key: string]: string } = {};
 
@@ -37,6 +109,10 @@ export default function DaftarPage() {
       newErrors.name = "Nama harus diisi";
     } else if (name.trim().length < 2) {
       newErrors.name = "Nama minimal 2 karakter";
+    } else if (duplicateNameWarning && duplicateNameWarning.startsWith("⚠️")) {
+      // Only block if it's an exact duplicate warning (starts with ⚠️)
+      newErrors.name =
+        "Nama dengan usia yang sama sudah terdaftar untuk lomba yang dipilih";
     }
 
     if (typeof age !== "number") {
@@ -166,6 +242,11 @@ export default function DaftarPage() {
                 .map(([_, value]) => value)
                 .join(", ");
               errorMessage = `Field yang kurang: ${missingFields}`;
+            } else if (errorData.duplicateField === "nama") {
+              // Special handling for duplicate name
+              errorMessage = `⚠️ ${errorData.message}\n\nNama "${errorData.duplicateValue}" sudah terdaftar untuk lomba "${errorData.duplicateLomba}". Silakan pilih lomba lain atau gunakan nama yang berbeda.`;
+            } else if (errorData.duplicateField === "email") {
+              errorMessage = `⚠️ Email "${errorData.duplicateValue}" sudah terdaftar sebelumnya.`;
             }
 
             throw new Error(errorMessage);
@@ -192,6 +273,7 @@ export default function DaftarPage() {
         setAge("");
         setPhone("");
         setSelected([]);
+        setDuplicateNameWarning("");
 
         // Trigger event untuk update halaman peserta
         if (typeof window !== "undefined") {
@@ -264,6 +346,14 @@ export default function DaftarPage() {
         Isi data diri dan pilih lomba yang sesuai dengan usia.
       </p>
 
+      <div className="mt-4 p-4 bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg">
+        <p className="text-sm text-blue-800 dark:text-blue-200">
+          💡 <strong>Info:</strong> Peserta dengan nama yang sama bisa mendaftar
+          asalkan usia berbeda. Sistem akan menggunakan kombinasi nama + usia
+          untuk identifikasi yang unik.
+        </p>
+      </div>
+
       <form onSubmit={onSubmit} className="mt-8 grid grid-cols-1 gap-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
@@ -273,6 +363,7 @@ export default function DaftarPage() {
               onChange={(e) => {
                 setName(e.target.value);
                 if (errors.name) setErrors((prev) => ({ ...prev, name: "" }));
+                if (duplicateNameWarning) setDuplicateNameWarning("");
               }}
               className="mt-2 w-full rounded-md border border-black/10 dark:border-white/15 bg-white/60 dark:bg-white/[0.04] px-4 py-2.5 outline-none focus:ring-2 focus:ring-red-500"
               placeholder="Contoh: Budi Santoso"
@@ -280,6 +371,17 @@ export default function DaftarPage() {
             />
             {errors.name && (
               <p className="mt-1 text-xs text-red-500">{errors.name}</p>
+            )}
+            {duplicateNameWarning && (
+              <p
+                className={`mt-1 text-xs p-2 rounded border ${
+                  duplicateNameWarning.startsWith("⚠️")
+                    ? "text-orange-600 bg-orange-50 border-orange-200"
+                    : "text-blue-600 bg-blue-50 border-blue-200"
+                }`}
+              >
+                {duplicateNameWarning}
+              </p>
             )}
           </div>
           <div>

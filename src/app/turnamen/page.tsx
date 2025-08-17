@@ -10,6 +10,8 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
+  SelectContentSolid,
+  SelectItemSolid,
 } from "@/components/ui/select";
 import {
   Trophy,
@@ -232,13 +234,13 @@ export default function TurnamenPage() {
                 <SelectTrigger className="w-64">
                   <SelectValue placeholder="Pilih kategori lomba" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContentSolid>
                   {lombaOptions.map((option) => (
-                    <SelectItem key={option.value} value={option.value}>
+                    <SelectItemSolid key={option.value} value={option.value}>
                       {option.label}
-                    </SelectItem>
+                    </SelectItemSolid>
                   ))}
-                </SelectContent>
+                </SelectContentSolid>
               </Select>
             </div>
           </div>

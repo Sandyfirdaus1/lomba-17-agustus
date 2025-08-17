@@ -10,6 +10,8 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
+  SelectContentSolid,
+  SelectItemSolid,
 } from "@/components/ui/select";
 import { RefreshCw, Users, Phone, Calendar, Trash2, X } from "lucide-react";
 import ClientOnly from "@/components/ClientOnly";
@@ -172,7 +174,7 @@ export default function DaftarPeserta() {
       }
     }
 
-      setFilteredPeserta(filtered);
+    setFilteredPeserta(filtered);
   }, [selectedLomba, peserta, activeFilter]);
 
   const handleRefresh = () => {
@@ -505,13 +507,13 @@ export default function DaftarPeserta() {
                 <SelectTrigger className="w-64">
                   <SelectValue placeholder="Pilih kategori lomba" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContentSolid>
                   {lombaOptions.map((option) => (
-                    <SelectItem key={option.value} value={option.value}>
+                    <SelectItemSolid key={option.value} value={option.value}>
                       {option.label}
-                    </SelectItem>
+                    </SelectItemSolid>
                   ))}
-                </SelectContent>
+                </SelectContentSolid>
               </Select>
             </div>
 
@@ -527,18 +529,18 @@ export default function DaftarPeserta() {
                 </Button>
               )}
 
-            <Button
-              onClick={handleRefresh}
-              disabled={refreshing}
-              className="bg-red-600 hover:bg-red-700"
-            >
-              <RefreshCw
-                className={`h-4 w-4 mr-2 ${refreshing ? "animate-spin" : ""}`}
-              />
-              {refreshing ? "Memperbarui..." : "Perbarui Data"}
-            </Button>
+              <Button
+                onClick={handleRefresh}
+                disabled={refreshing}
+                className="bg-red-600 hover:bg-red-700"
+              >
+                <RefreshCw
+                  className={`h-4 w-4 mr-2 ${refreshing ? "animate-spin" : ""}`}
+                />
+                {refreshing ? "Memperbarui..." : "Perbarui Data"}
+              </Button>
+            </div>
           </div>
-                        </div>
 
           {/* Peserta List - Grouped by Lomba */}
           {Object.entries(groupedPeserta).map(([lombaName, pesertaList]) => (

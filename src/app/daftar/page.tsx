@@ -9,7 +9,6 @@ import { motion } from "framer-motion";
 interface Peserta {
   _id: string;
   nama: string;
-  email: string;
   noTelepon: string;
   usia: number;
   alamat: string;
@@ -17,6 +16,18 @@ interface Peserta {
   catatan?: string;
   tanggalDaftar: string;
   status: string;
+}
+
+// Define backend error response shape to avoid using `any`
+interface BackendErrorResponse {
+  success?: boolean;
+  message?: string;
+  errors?: string[];
+  missingFields?: Record<string, string | null | undefined>;
+  duplicateField?: string;
+  duplicateValue?: string;
+  duplicateLomba?: string;
+  duplicateUsia?: number;
 }
 
 export default function DaftarPage() {
@@ -237,27 +248,43 @@ export default function DaftarPage() {
           });
 
           if (!response.ok) {
-            const errorData = await response.json().catch(() => ({}));
-            console.error(`Backend error for ${competition.name}:`, errorData);
+            const contentType = response.headers.get("content-type") || "";
+            let errorData: BackendErrorResponse | null = null;
+            let rawErrorText: string | null = null;
+
+            if (contentType.includes("application/json")) {
+              errorData = await response.json().catch(() => null);
+            } else {
+              rawErrorText = await response.text().catch(() => null);
+            }
+
+            console.error(`Backend error for ${competition.name}:`, {
+              status: response.status,
+              statusText: response.statusText,
+              contentType,
+              error: errorData ?? rawErrorText ?? "<no body>",
+            });
 
             let errorMessage = "Terjadi kesalahan saat mendaftar";
 
             // Show specific validation errors if available
-            if (errorData.errors && Array.isArray(errorData.errors)) {
+            if (errorData?.errors && Array.isArray(errorData.errors)) {
               errorMessage = `Validasi gagal: ${errorData.errors.join(", ")}`;
-            } else if (errorData.missingFields) {
+            } else if (errorData?.missingFields) {
               const missingFields = Object.entries(errorData.missingFields)
                 .filter(([, value]) => value !== null)
                 .map(([, value]) => value)
                 .join(", ");
               errorMessage = `Field yang kurang: ${missingFields}`;
-            } else if (errorData.duplicateField === "nama") {
-              // Special handling for duplicate name
-              errorMessage = `⚠️ ${errorData.message}\n\nNama "${errorData.duplicateValue}" sudah terdaftar untuk lomba "${errorData.duplicateLomba}". Silakan pilih lomba lain atau gunakan usia yang berbeda.`;
-            } else if (errorData.duplicateField === "email") {
-              errorMessage = `⚠️ Email "${errorData.duplicateValue}" sudah terdaftar sebelumnya.`;
-            } else if (errorData.message) {
+            } else if (errorData?.duplicateField === "nama") {
+              // Special handling for duplicate name (avoid repeating the same message twice)
+              const baseMsg =
+                errorData?.message || `Nama sudah terdaftar untuk lomba ini`;
+              errorMessage = `⚠️ ${baseMsg}. Silakan pilih lomba lain atau gunakan usia yang berbeda.`;
+            } else if (errorData?.message) {
               errorMessage = errorData.message;
+            } else if (rawErrorText && rawErrorText.trim().length > 0) {
+              errorMessage = `Error ${response.status}: ${rawErrorText}`;
             } else if (response.status === 400) {
               errorMessage = `Data tidak valid untuk lomba ${competition.name}`;
             } else if (response.status === 409) {

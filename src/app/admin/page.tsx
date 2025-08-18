@@ -105,6 +105,41 @@ export default function AdminPage() {
 
     // Fetch peserta data
     fetchPeserta();
+
+    // Auto-expire admin mode after 15 minutes of inactivity
+    if (typeof window !== "undefined") {
+      const updateLastActive = () => {
+        localStorage.setItem("lomba17_admin_lastActive", String(Date.now()));
+      };
+
+      // Update last active on common user interactions
+      window.addEventListener("mousemove", updateLastActive);
+      window.addEventListener("keydown", updateLastActive);
+      window.addEventListener("click", updateLastActive);
+
+      const interval = setInterval(() => {
+        try {
+          const isAdminActive = localStorage.getItem("lomba17_admin") === "true";
+          if (!isAdminActive) return;
+
+          const last = Number(localStorage.getItem("lomba17_admin_lastActive") || "0");
+          const now = Date.now();
+          const FIFTEEN_MIN = 15 * 60 * 1000;
+          if (last && now - last > FIFTEEN_MIN) {
+            setAdminStatus(false);
+            setAdminMode(false);
+            alert("Mode Admin dinonaktifkan karena tidak ada aktivitas selama 15 menit.");
+          }
+        } catch {}
+      }, 30 * 1000); // cek tiap 30 detik
+
+      return () => {
+        window.removeEventListener("mousemove", updateLastActive);
+        window.removeEventListener("keydown", updateLastActive);
+        window.removeEventListener("click", updateLastActive);
+        clearInterval(interval);
+      };
+    }
   }, []);
 
   // Fetch peserta dari backend

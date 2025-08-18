@@ -175,12 +175,17 @@ export function setAdminStatus(status: boolean) {
   if (typeof window === "undefined") return;
   if (status) {
     localStorage.setItem("lomba17_admin", "true");
+    // Simpan timestamp terakhir aktivitas admin
+    localStorage.setItem("lomba17_admin_lastActive", String(Date.now()));
   } else {
     localStorage.removeItem("lomba17_admin");
+    localStorage.removeItem("lomba17_admin_lastActive");
   }
-  
+
   // Dispatch custom event untuk update komponen lain secara real-time
-  window.dispatchEvent(new CustomEvent("adminStatusChanged", { detail: status }));
+  window.dispatchEvent(
+    new CustomEvent("adminStatusChanged", { detail: status })
+  );
 }
 
 export function toggleAdminStatus() {

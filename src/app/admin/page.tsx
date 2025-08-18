@@ -550,7 +550,7 @@ export default function AdminPage() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {(Object.keys(ageGroupsData) as AgeGroupKey[]).map((group) => {
-              const Icon = iconByGroup[group];
+              const Icon = iconByGroup[group] || Users;
               const info = ageGroupsData[group];
               const isEditing = editingAgeGroup === group;
 
@@ -1399,7 +1399,6 @@ export default function AdminPage() {
                       usia: editingPeserta?.usia || 0,
                       jenisLomba: editingPeserta?.jenisLomba || "",
                       status: editingPeserta?.status || "Terdaftar",
-                      catatan: editingPeserta?.catatan || "",
                     } as Peserta)
                   }
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:ring-2 focus:ring-red-500 focus:border-transparent"
@@ -1419,7 +1418,7 @@ export default function AdminPage() {
                       usia: editingPeserta?.usia || 0,
                       jenisLomba: editingPeserta?.jenisLomba || "",
                       tanggalDaftar: editingPeserta?.tanggalDaftar || "",
-                      catatan: editingPeserta?.catatan || "",
+                      // status sudah di-set di atas
                     } as Peserta)
                   }
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:ring-2 focus:ring-red-500 focus:border-transparent"
@@ -1432,29 +1431,6 @@ export default function AdminPage() {
                   <option value="Juara 3">Juara 3</option>
                   <option value="Diskualifikasi">Diskualifikasi</option>
                 </select>
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-2">
-                  Catatan (opsional)
-                </label>
-                <input
-                  type="text"
-                  value={editingPeserta?.catatan || ""}
-                  onChange={(e) =>
-                    setEditingPeserta({
-                      ...editingPeserta,
-                      catatan: e.target.value,
-                      nama: editingPeserta?.nama || "",
-                      noTelepon: editingPeserta?.noTelepon || "",
-                      usia: editingPeserta?.usia || 0,
-                      jenisLomba: editingPeserta?.jenisLomba || "",
-                      tanggalDaftar: editingPeserta?.tanggalDaftar || "",
-                      status: editingPeserta?.status || "Terdaftar",
-                    } as Peserta)
-                  }
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:ring-2 focus:ring-red-500 focus:border-transparent"
-                  placeholder="Catatan tambahan"
-                />
               </div>
 
               <div className="flex gap-3">
@@ -1613,7 +1589,6 @@ export default function AdminPage() {
                   <option value="Diskualifikasi">Diskualifikasi</option>
                 </select>
               </div>
-              {/* Catatan dihilangkan sesuai permintaan */}
 
               <div className="flex gap-3">
                 <button

@@ -45,7 +45,6 @@ interface Peserta {
   jenisLomba: string;
   tanggalDaftar: string;
   status: string;
-  catatan?: string;
 }
 
 const iconByGroup: Record<
@@ -83,6 +82,7 @@ export default function AdminPage() {
     null
   );
   const [selectedTurnamenStatus, setSelectedTurnamenStatus] = useState("semua");
+  const [selectedTurnamenLomba, setSelectedTurnamenLomba] = useState("semua");
 
   const [newAgeGroup, setNewAgeGroup] = useState({
     key: "",
@@ -891,29 +891,52 @@ export default function AdminPage() {
       {/* Manajemen Turnamen */}
       <section className="mt-12">
         <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-6 mb-6">
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-6">
             <h2 className="text-xl font-semibold">Manajemen Turnamen</h2>
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-600">Status:</span>
-              <Select
-                value={selectedTurnamenStatus}
-                onValueChange={setSelectedTurnamenStatus}
-              >
-                <SelectTrigger className="w-48">
-                  <SelectValue placeholder="Pilih status" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="semua">Semua Status</SelectItem>
-                  <SelectItem value="Terdaftar">Terdaftar</SelectItem>
-                  <SelectItem value="Lolos ke Babak Selanjutnya">
-                    Lolos
-                  </SelectItem>
-                  <SelectItem value="Juara 1">Juara 1</SelectItem>
-                  <SelectItem value="Juara 2">Juara 2</SelectItem>
-                  <SelectItem value="Juara 3">Juara 3</SelectItem>
-                  <SelectItem value="Diskualifikasi">Diskualifikasi</SelectItem>
-                </SelectContent>
-              </Select>
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-gray-600">Status:</span>
+                <Select
+                  value={selectedTurnamenStatus}
+                  onValueChange={setSelectedTurnamenStatus}
+                >
+                  <SelectTrigger className="w-48">
+                    <SelectValue placeholder="Pilih status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="semua">Semua Status</SelectItem>
+                    <SelectItem value="Terdaftar">Terdaftar</SelectItem>
+                    <SelectItem value="Lolos ke Babak Selanjutnya">
+                      Lolos
+                    </SelectItem>
+                    <SelectItem value="Juara 1">Juara 1</SelectItem>
+                    <SelectItem value="Juara 2">Juara 2</SelectItem>
+                    <SelectItem value="Juara 3">Juara 3</SelectItem>
+                    <SelectItem value="Diskualifikasi">
+                      Diskualifikasi
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-gray-600">Lomba:</span>
+                <Select
+                  value={selectedTurnamenLomba}
+                  onValueChange={setSelectedTurnamenLomba}
+                >
+                  <SelectTrigger className="w-56">
+                    <SelectValue placeholder="Pilih lomba" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="semua">Semua Lomba</SelectItem>
+                    {competitionsData.map((c) => (
+                      <SelectItem key={c.id} value={c.name}>
+                        {c.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
           </div>
 
@@ -926,8 +949,10 @@ export default function AdminPage() {
               {peserta
                 .filter(
                   (p) =>
-                    selectedTurnamenStatus === "semua" ||
-                    p.status === selectedTurnamenStatus
+                    (selectedTurnamenStatus === "semua" ||
+                      p.status === selectedTurnamenStatus) &&
+                    (selectedTurnamenLomba === "semua" ||
+                      p.jenisLomba === selectedTurnamenLomba)
                 )
                 .map((p) => (
                   <div
@@ -1278,7 +1303,6 @@ export default function AdminPage() {
                       jenisLomba: editingPeserta?.jenisLomba || "",
                       tanggalDaftar: editingPeserta?.tanggalDaftar || "",
                       status: editingPeserta?.status || "Terdaftar",
-                      catatan: editingPeserta?.catatan || "",
                     } as Peserta)
                   }
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:ring-2 focus:ring-red-500 focus:border-transparent"
@@ -1302,7 +1326,6 @@ export default function AdminPage() {
                       jenisLomba: editingPeserta?.jenisLomba || "",
                       tanggalDaftar: editingPeserta?.tanggalDaftar || "",
                       status: editingPeserta?.status || "Terdaftar",
-                      catatan: editingPeserta?.catatan || "",
                     } as Peserta)
                   }
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:ring-2 focus:ring-red-500 focus:border-transparent"
@@ -1324,7 +1347,6 @@ export default function AdminPage() {
                       jenisLomba: editingPeserta?.jenisLomba || "",
                       tanggalDaftar: editingPeserta?.tanggalDaftar || "",
                       status: editingPeserta?.status || "Terdaftar",
-                      catatan: editingPeserta?.catatan || "",
                     } as Peserta)
                   }
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:ring-2 focus:ring-red-500 focus:border-transparent"
@@ -1335,25 +1357,31 @@ export default function AdminPage() {
                 <label className="block text-sm font-medium mb-2">
                   Jenis Lomba
                 </label>
-                <input
-                  type="text"
+                <Select
                   value={editingPeserta?.jenisLomba || ""}
-                  onChange={(e) =>
+                  onValueChange={(val) =>
                     setEditingPeserta({
                       ...editingPeserta,
-                      jenisLomba: e.target.value,
+                      jenisLomba: val,
                       nama: editingPeserta?.nama || "",
                       noTelepon: editingPeserta?.noTelepon || "",
                       usia: editingPeserta?.usia || 0,
                       tanggalDaftar: editingPeserta?.tanggalDaftar || "",
                       status: editingPeserta?.status || "Terdaftar",
-                      catatan: editingPeserta?.catatan || "",
                     } as Peserta)
                   }
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:ring-2 focus:ring-red-500 focus:border-transparent"
-                  placeholder="Contoh: Balap Karung, Tarik Tambang"
-                  required
-                />
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Pilih lomba" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {competitionsData.map((c) => (
+                      <SelectItem key={c.id} value={c.name}>
+                        {c.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
               <div>
                 <label className="block text-sm font-medium mb-2">
@@ -1451,8 +1479,8 @@ export default function AdminPage() {
 
       {/* Modal Edit Peserta */}
       {showEditPeserta && editingPeserta && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white dark:bg-gray-900 rounded-lg shadow-xl max-w-md w-full p-6">
+        <div className="fixed inset-0 bg-black/50 flex items-start sm:items-center justify-center z-50 p-2 sm:p-4 overflow-y-auto">
+          <div className="bg-white dark:bg-gray-900 rounded-lg shadow-xl w-full max-w-lg sm:max-w-xl md:max-w-2xl p-4 sm:p-6 my-4">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold flex items-center gap-2">
                 <Edit className="h-5 w-5 text-red-600" />
@@ -1526,19 +1554,26 @@ export default function AdminPage() {
                 <label className="block text-sm font-medium mb-2">
                   Jenis Lomba
                 </label>
-                <input
-                  type="text"
+                <Select
                   value={editingPeserta.jenisLomba}
-                  onChange={(e) =>
+                  onValueChange={(val) =>
                     setEditingPeserta({
                       ...editingPeserta,
-                      jenisLomba: e.target.value,
+                      jenisLomba: val,
                     })
                   }
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:ring-2 focus:ring-red-500 focus:border-transparent"
-                  placeholder="Contoh: Balap Karung, Tarik Tambang"
-                  required
-                />
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Pilih lomba" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {competitionsData.map((c) => (
+                      <SelectItem key={c.id} value={c.name}>
+                        {c.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
               <div>
                 <label className="block text-sm font-medium mb-2">
@@ -1578,23 +1613,7 @@ export default function AdminPage() {
                   <option value="Diskualifikasi">Diskualifikasi</option>
                 </select>
               </div>
-              <div>
-                <label className="block text-sm font-medium mb-2">
-                  Catatan (opsional)
-                </label>
-                <input
-                  type="text"
-                  value={editingPeserta.catatan || ""}
-                  onChange={(e) =>
-                    setEditingPeserta({
-                      ...editingPeserta,
-                      catatan: e.target.value,
-                    })
-                  }
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 focus:ring-2 focus:ring-red-500 focus:border-transparent"
-                  placeholder="Catatan tambahan"
-                />
-              </div>
+              {/* Catatan dihilangkan sesuai permintaan */}
 
               <div className="flex gap-3">
                 <button
